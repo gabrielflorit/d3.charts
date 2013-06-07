@@ -21,8 +21,11 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 				transform: 'translate(' + padding/2 + ', ' + padding/2 + ')'
 			});
 		}
+
 		var areaLayerBase = this.base.append('g');
 		setPadding(areaLayerBase, this.padding());
+
+		this.xAxisLayerBase = this.base.append('g');
 
 		// set height - gets called now, and on height change
 		function setHeight(chart) {
@@ -54,6 +57,13 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 				chart.x.domain(d3.extent(data, function(d) { return d.date; }))
 				chart.y.domain(d3.extent(data, function(d) { return d.count; }))
 
+				var xAxis = d3.svg.axis().scale(chart.x).orient('bottom');
+				chart.xAxisLayerBase.attr({
+					class: 'axis',
+					transform: 'translate(0, ' + (chart.height() - chart.padding()/2) + ')'
+				})
+				.call(xAxis);
+
 				return this.selectAll('area').data([data]);
 			},
 
@@ -64,6 +74,7 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 			}
 
 		});
+
 	},
 
 	padding: function(newPadding) {

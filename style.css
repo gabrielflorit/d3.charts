@@ -7,3 +7,14 @@ svg {
 path {
 	fill: black;
 }
+
+.axis {
+	font-size: 0.7em;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}

@@ -15,16 +15,16 @@
 
 		var area = d3.select('#container')
 			.append('svg')
-			.chart('CountOverTimeAreaChart')
-			.width(500)
+			.chart('CountOverTimeAreaChartWithXAxis')
+			// .width(500)
 			// .height(300)
 			// .padding(10)
 			.draw(data);
 
 		// var bottomAxis = d3.select('#container')
 		// 	.append('svg')
-		// 	.chart('XAxisChart')
-		// 	// .width(500)
+		// 	.chart('CountOverTimeAreaChartWithXAxis')
+		// 	.width(500)
 		// 	// .height(300)
 		// 	// .padding(10)
 		// 	.draw(data);
