@@ -16,10 +16,14 @@
 		var area = d3.select('#container')
 			.append('svg')
 			.chart('CountOverTimeAreaChartWithXAxis')
-			// .width(500)
+			.width(800);
 			// .height(300)
 			// .padding(10)
-			.draw(data);
+		
+		area.draw(data);
+
+		area.width(600);
+		area.height(400);
 
 		// var bottomAxis = d3.select('#container')
 		// 	.append('svg')

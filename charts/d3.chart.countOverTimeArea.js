@@ -5,14 +5,14 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 		var chart = this;
 
 		// create the scales
-		var x = d3.time.scale();
+		this.x(d3.time.scale());
+
 		var y = d3.scale.linear();
-		this.x = x;
 		this.y = y;
 
 		// create the area generator
 		this.area = d3.svg.area()
-			.x(function(d, i) { return x(d.date); })
+			.x(function(d, i) { return chart.x()(d.date); })
 			.y1(function(d) { return y(d.count); });
 
 		// set padding - gets called now, and on padding change
@@ -21,11 +21,8 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 				transform: 'translate(' + padding/2 + ', ' + padding/2 + ')'
 			});
 		}
-
 		var areaLayerBase = this.base.append('g');
 		setPadding(areaLayerBase, this.padding());
-
-		this.xAxisLayerBase = this.base.append('g');
 
 		// set height - gets called now, and on height change
 		function setHeight(chart) {
@@ -36,7 +33,7 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 
 		// set width - gets called now, and on width change
 		function setWidth(chart) {
-			chart.x.range([0, chart.width() - chart.padding()]);
+			chart.x().range([0, chart.width() - chart.padding()]);
 		}
 		setWidth(this);
 
@@ -53,28 +50,39 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 
 			dataBind: function(data) {
 				var chart = this.chart();
+				chart.data = data;
 
-				chart.x.domain(d3.extent(data, function(d) { return d.date; }))
+				chart.x().domain(d3.extent(data, function(d) { return d.date; }))
 				chart.y.domain(d3.extent(data, function(d) { return d.count; }))
 
-				var xAxis = d3.svg.axis().scale(chart.x).orient('bottom');
-				chart.xAxisLayerBase.attr({
-					class: 'axis',
-					transform: 'translate(0, ' + (chart.height() - chart.padding()/2) + ')'
-				})
-				.call(xAxis);
-
-				return this.selectAll('area').data([data]);
+				return this.selectAll('.area').data([data]);
 			},
 
 			insert: function() {
 				var chart = this.chart();
+				return this.insert('path');
+			},
 
-				return this.append('path').attr('d', chart.area);
+			events: {
+				merge: function() {
+					var chart = this.chart();
+					return this.attr('d', chart.area).classed('area', true);
+				}
+
 			}
 
 		});
 
+	},
+
+	x: function(scale) {
+		if (arguments.length === 0) {
+			return this._x;
+		}
+
+		this._x = scale;
+
+		return this;
 	},
 
 	padding: function(newPadding) {
