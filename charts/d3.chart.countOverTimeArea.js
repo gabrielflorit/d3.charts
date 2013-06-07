@@ -1,19 +1,19 @@
-d3.chart('BaseChart').extend('AreaChart', {
+d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 
 	initialize: function() {
 
 		var chart = this;
 
 		// create the scales
-		var x = d3.scale.linear();
+		var x = d3.time.scale();
 		var y = d3.scale.linear();
 		this.x = x;
 		this.y = y;
 
 		// create the area generator
 		this.area = d3.svg.area()
-			.x(function(d, i) { return x(i); })
-			.y1(function(d) { return y(d); });
+			.x(function(d, i) { return x(d.date); })
+			.y1(function(d) { return y(d.count); });
 
 		// set padding - gets called now, and on padding change
 		function setPadding(element, padding) {
@@ -51,8 +51,8 @@ d3.chart('BaseChart').extend('AreaChart', {
 			dataBind: function(data) {
 				var chart = this.chart();
 
-				chart.x.domain([0, data.length - 1]);
-				chart.y.domain(d3.extent(data));
+				chart.x.domain(d3.extent(data, function(d) { return d.date; }))
+				chart.y.domain(d3.extent(data, function(d) { return d.count; }))
 
 				return this.selectAll('area').data([data]);
 			},
