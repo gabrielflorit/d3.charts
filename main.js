@@ -27,11 +27,13 @@
 
 			var area = d3.select('#container')
 				.append('svg')
-				.chart('CountOverTimeAreaChartWithXAxis')
-				.max(max)
-				.width(800);
+				.chart('CountOverTimeAreaChartWithXAxisAndMax')
+				.max(max);
 			
 			area.draw(datum);
+
+			area.width($(window).width()*0.9);
+
 
 		});
 

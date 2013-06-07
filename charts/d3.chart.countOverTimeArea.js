@@ -6,14 +6,12 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 
 		// create the scales
 		this.x(d3.time.scale());
-
-		var y = d3.scale.linear();
-		this.y = y;
+		this.y(d3.scale.linear());
 
 		// create the area generator
 		this.area = d3.svg.area()
 			.x(function(d, i) { return chart.x()(d.date); })
-			.y1(function(d) { return y(d.count); });
+			.y1(function(d) { return chart.y()(d.count); });
 
 		// set padding - gets called now, and on padding change
 		function setPadding(element, padding) {
@@ -27,7 +25,7 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 		// set height - gets called now, and on height change
 		function setHeight(chart) {
 			chart.area.y0(chart.height() - chart.padding());
-			chart.y.range([chart.height() - chart.padding(), 0]);
+			chart.y().range([chart.height() - chart.padding(), 0]);
 		}
 		setHeight(this);
 
@@ -53,7 +51,7 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 				chart.data = data;
 
 				chart.x().domain(d3.extent(data, function(d) { return d.date; }))
-				chart.y.domain([0, chart.max()])
+				chart.y().domain([0, chart.max()])
 
 				return this.selectAll('.area').data([data]);
 			},
@@ -106,6 +104,16 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 		}
 
 		this._x = scale;
+
+		return this;
+	},
+
+	y: function(scale) {
+		if (arguments.length === 0) {
+			return this._y;
+		}
+
+		this._y = scale;
 
 		return this;
 	},

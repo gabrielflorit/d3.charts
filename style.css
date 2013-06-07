@@ -24,3 +24,8 @@ path {
 	stroke: #AAA;
 	shape-rendering: crispEdges;
 }
+
+text.max {
+	fill: white;
+	font-size: 0.8em;
+}
