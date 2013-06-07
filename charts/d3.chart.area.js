@@ -15,6 +15,7 @@ d3.chart('BaseChart').extend('AreaChart', {
 			.x(function(d, i) { return x(i); })
 			.y1(function(d) { return y(d); });
 
+		// set padding - gets called now, and on padding change
 		function setPadding(element, padding) {
 			element.attr({
 				transform: 'translate(' + padding/2 + ', ' + padding/2 + ')'
@@ -23,26 +24,29 @@ d3.chart('BaseChart').extend('AreaChart', {
 		var areaLayerBase = this.base.append('g');
 		setPadding(areaLayerBase, this.padding());
 
+		// set height - gets called now, and on height change
 		function setHeight(chart) {
 			chart.area.y0(chart.height() - chart.padding());
 			chart.y.range([chart.height() - chart.padding(), 0]);
 		}
 		setHeight(this);
 
+		// set width - gets called now, and on width change
+		function setWidth(chart) {
+			chart.x.range([0, chart.width() - chart.padding()]);
+		}
+		setWidth(this);
+
 		// reset scale ranges on dimension changes
-		chart.on('change:width', function() {
-			chart.x.range([0, this.width() - this.padding()]);
-		});
-		chart.on('change:height', function() {
+		this.on('change:width', function() { setWidth(chart); });
+		this.on('change:height', function() { setHeight(chart); });
+		this.on('change:padding', function() {
+			setWidth(chart);
 			setHeight(chart);
-		});
-		chart.on('change:padding', function() {
-			chart.trigger('change:width');
-			chart.trigger('change:height');
 			setPadding(this.layer('area'), this.padding());
 		});
 
-		this.layer("area", areaLayerBase, {
+		this.layer('area', areaLayerBase, {
 
 			dataBind: function(data) {
 				var chart = this.chart();
@@ -75,7 +79,7 @@ d3.chart('BaseChart').extend('AreaChart', {
 		if (this._padding !== oldPadding) {
 
 			// trigger a change event
-			this.trigger("change:padding");
+			this.trigger('change:padding');
 
 			// redraw if we saved the data on the chart
 			if (this.data) {
