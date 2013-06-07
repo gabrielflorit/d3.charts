@@ -53,7 +53,7 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 				chart.data = data;
 
 				chart.x().domain(d3.extent(data, function(d) { return d.date; }))
-				chart.y.domain(d3.extent(data, function(d) { return d.count; }))
+				chart.y.domain([0, chart.max()])
 
 				return this.selectAll('.area').data([data]);
 			},
@@ -73,6 +73,31 @@ d3.chart('BaseChart').extend('CountOverTimeAreaChart', {
 
 		});
 
+	},
+
+	max: function(newMax) {
+		if (arguments.length === 0) {
+			return this._max || 1;
+		}
+
+		var oldmax = this._max;
+
+		this._max = newMax;
+
+		// only if the max actually changed:
+		if (this._max !== oldmax) {
+
+			// trigger a change event
+			this.trigger('change:max');
+
+			// redraw if we saved the data on the chart
+			if (this.data) {
+				this.draw(this.data);
+			}
+		}
+
+		// always return the chart, for chaining magic.
+		return this;
 	},
 
 	x: function(scale) {
