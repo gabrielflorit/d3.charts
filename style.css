@@ -1,7 +1,9 @@
 svg {
-  background: #704747;
+	border: solid black 1px;
+	margin: 1em;
+	background: #704747;
 }
 
 path {
-  fill: black;
+	fill: black;
 }
