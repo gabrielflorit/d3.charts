@@ -1,4 +1,7 @@
+svg {
+  background: #704747;
+}
+
 path {
-	stroke: #000;
-	fill: #000;
+  fill: white;
 }
